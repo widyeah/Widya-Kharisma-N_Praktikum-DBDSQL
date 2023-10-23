@@ -1,0 +1,68 @@
+create database penjualan;
+
+show penjualan;
+
+use penjualan;
+
+create schema penjualandvd;
+
+drop schema penjualandvd;
+
+create table movie(
+kode_dvd varchar(10) not null primary key,
+judul varchar (60) not null,
+harga_sewa double not null,
+denda double not null,
+tahun_rilis smallint unsigned not null
+);
+
+create table transaksi(
+kode_dvd varchar(10),
+kode_pelanggan varchar(10),
+tanggal_sewa date not null primary key,
+tanggal_wajib_kembali date not null,
+tanggal_realisasi_kembali date not null,
+foreign key (kode_dvd) references movie(kode_dvd),
+foreign key (kode_pelanggan) references pelanggan(kode_pelanggan)
+)
+
+create table genre_movie (
+id_genre smallint not null,
+kode_dvd varchar(10)not null,
+foreign key (id_genre) references genre(id_genre);
+foreign key (kode_dvd) references movie (kode_dvd)
+)
+
+create table genre(
+id_genre smallint not null primary key,
+genre varchar(45)not null,
+)
+
+create table pelanggan(
+kode_pelanggan varchar(10) not null primary key,
+id_kelurahan smallint references kelurahan (id_kelurahan),
+nama varchar(45)not null,
+alamat varchar (60)not null,
+jenis_kelamin char(1)not null,
+constraint cek_jenis_kelamin check (jenis_kelamin in ('P','L')) 
+);
+
+create table kelurahan(
+id_kelurahan smallint not null primary key,
+id_kecamatan smallint not null,
+kelurahan varchar(45) not null,
+foreign key (id_kecamatan) references kecamatan (id_kecamatan)
+)
+
+create table kecamatan(
+id_kecamatan smallint not null primary key,
+kecamatan varchar(45)
+)
+
+create table kontak pelanggan(
+no_hp varchar(25) unique,
+kode_pelanggan varchar(10) references pelanggan (kode_pelanggan),
+index kontak_pelanggan_unik1 (no_hp)
+)
+
+alter table movie modify tahun_rilis year(4);
